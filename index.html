@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+		<head >
+		<link rel="stylesheet" href="style.css">
+
+		</head>
+	<body style="background-image:url('photos/back.jpg') ; margin-left: 100px;" >      
+	
+		<h1 class="hl">Learn The English Letters</h1>
+		 <div>
+		<label class='lab'>Numbers of English Letters:</label>
+	   
+		<input type="number" id="num" class="inp">
+		<button id="generate" class="sub">generate</button>
+		</div>
+		<div id="btns" style="min-width:50px;height:100px; padding-top: 20px" >
+			
+		</div>
+		 
+       <div class="showImg">
+	    	<img id="imgg">
+	    </div>
+        
+
+	<script>	
+	
+	var array=['a','b','c','d','e','f','g','h','k','l','n','m','o','p','s','w','q','x','y','z','t','r','v','j','i','u'];
+	
+var images=['a.jpg','b.jpg','c.jpg','d.jpg','e.jpg','f.jpg','g.jpg','h.jpg','k.jpg','l.jpg','n.jpg','m.jpg','o.jpg','p.jpg','s.jpg','w.jpg','q.jpg','x.jpg','y.jpg','z.PNG','t.jpg','r.jpg','v.jpg','j.jpg','i.jpg','u.jpg'];
+			
+		var number=document.getElementById("num");
+		var gener=document.getElementById("generate");
+		var img=document.getElementById("imgg");
+		var div=document.getElementById("btns");
+		//var countGenerated=1;
+		//var countClicked=1;
+		var arrfreq=[];
+		var idx;
+		for(var i=0;i<26;i++){
+			arrfreq[i]=1;
+		
+		}
+		var loadStorage;
+		
+		window.addEventListener('load',function(e){
+			var l=new store(e.type,e.target,new Date());
+			if(localStorage.key("page loaded")){
+				loadStorage=Array(localStorage.getItem("page loaded"))
+				loadStorage.push(l.str);
+				localStorage.setItem('page loaded',loadStorage);
+			}
+			else{
+			localStorage.setItem('page loaded ',l.str);
+	}
+			setInterval(function(){ localStorage.clear();
+			countGenerated=1;
+			 }, 5000);                  //remove the localstorage after 5 sec
+		});
+		var unloadStorage
+		window.addEventListener('unload',function(e){
+			var unl=new store(e.type,e.target,new Date());
+			if(localStorage.key("page unloaded")){
+				unloadStorage=Array(localStorage.getItem("page unloaded"))
+				unloadStorage.push(unl.str);
+				localStorage.setItem('page unloaded',unloadStorage);
+			}
+			else{
+				localStorage.setItem('page unloaded',unl.str);
+	}
+			
+		});
+		
+		gener.addEventListener("click",function(e){
+		
+		var generateStoarge;
+	var s=new store(e.type,e.target,new Date());
+	if(localStorage.key("generate")){
+				generateStoarge=Array(localStorage.getItem("generate"))
+				generateStoarge.push(s.str);
+				localStorage.setItem('generate',generateStoarge);
+			}
+			else{
+				localStorage.setItem('generate',s.str);
+	}
+	div.innerHTML="";
+
+		if(number.value<=0 || number.value>26){
+			
+			alert("Invalid Input Range");
+			number.value=null;
+			
+			}
+			
+		else{	
+			
+			img.removeAttribute('src','photos/'+images[idx]);
+		var rand,newItem,character,arr=[],chk,a=0;
+		for(var i=0 ;i<=number.value; i++){ 
+			rand=Math.floor(Math.random() *26);
+			
+				if(i==0){
+		        arr[i]=	array[rand];
+				}
+				else{
+			for(var j=0 ;j<=i; j++){
+				chk=false;
+					if(arr[j]==array[rand]){
+						rand=Math.floor(Math.random() *26);                           //these lines r my queen code
+			        	j=0; chk=true;
+			        		
+			} 
+
+		    if(j==i && chk==false){
+		    	//alert("yes");
+		        arr[i]=	array[rand];
+		        break;
+		    }
+		            
+		}
+							
+			 newItem=document.createElement("button");
+			 character=document.createTextNode(array[rand]);
+				newItem.appendChild(character);
+				
+				newItem.setAttribute('class','btnss');
+				
+				div.appendChild(newItem);
+				
+		
+		}
+		
+		
+	}
+		
+		//var getButtons=document.getElementById()
+		//countGenerated++;
+		}});
+		
+		
+		div.addEventListener("click",function(e){
+			if(e.target.tagName!="DIV"){
+            e.target.setAttribute('style','background-color: red;')
+            }
+			for(var i=0;i<26;i++){
+				if(e.target.textContent==array[i]){
+				idx=i;
+				break; 
+				}
+			}
+
+			var vall="photos/"+images[idx];
+			img.setAttribute('src',vall);
+			img.setAttribute('class','showImg');
+		var s2=new store(e.type,e.target,new Date());
+		var btnStoarge;
+		if(e.target.tagName!="DIV"){
+			
+				if(localStorage.key('clicked on '+e.target.textContent)){
+				btnStoarge=Array(localStorage.getItem("clicked on "+e.target.textContent))
+				btnStoarge.push(s2.str);
+				localStorage.setItem('clicked on '+e.target.textContent,btnStoarge);}
+			    else
+				localStorage.setItem('clicked on '+e.target.textContent,s2.str);
+	
+			}});
+   function store(type,target,time){                                   // template function
+   	this.type=type;
+   	this.target=target;
+   	this.time=time;
+   	this.str=this.type+',  '+	this.target+',  '+this.time+'\n';
+   };
+
+	</script>
+	</body>
+</html>
