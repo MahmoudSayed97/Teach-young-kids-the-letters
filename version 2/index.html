@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+		<head >
+		<link rel="stylesheet" href="style.css">
+
+		</head>
+	<body style="background-image:url('photos/back.jpg') ; margin-left: 100px;" >      
+	
+		<h1 class="hl">Learn The English Letters</h1>
+		 <div>
+		<label class='lab'>Numbers of English Letters:</label>
+	   
+		<input type="number" id="num" class="inp">
+		<button id="generate" class="sub">generate</button>
+			 <button id="show" class="sub">Show</button>
+		</div>
+		<div id="btns" style="min-width:50px;height:100px; padding-top: 20px" >
+			
+		</div>
+		 
+       <div class="showImg">
+	    	<img id="imgg">
+	    </div>
+	    <div>
+		<table id="tbl" class="tb">
+
+		</table></div>
+    <script src="jquery-3.2.1.min.js"></script>
+	<script>	
+	
+	var array=['a','b','c','d','e','f','g','h','k','l','n','m','o','p','s','w','q','x','y','z','t','r','v','j','i','u'];
+	
+var images=['a.jpg','b.jpg','c.jpg','d.jpg','e.jpg','f.jpg','g.jpg','h.jpg','k.jpg','l.jpg','n.jpg','m.jpg','o.jpg','p.jpg','s.jpg','w.jpg','q.jpg','x.jpg','y.jpg','z.PNG','t.jpg','r.jpg','v.jpg','j.jpg','i.jpg','u.jpg'];
+			
+		var $number=$("#num");
+		var $gener=$("#generate");
+		var $img=$("#imgg");
+		var $div=$("#btns");
+		var d=document.getElementById('btns');
+		//var countGenerated=1;
+		//var countClicked=1;
+		var arrfreq=[];
+		var idx;
+		for(var i=0;i<26;i++){
+			arrfreq[i]=1;
+	 	}
+		var loadStorage=[];
+		$(window).on('load',function(e){
+			var l=new store(e.type,e.target,new Date(),"load");
+			if (localStorage['load']) {
+				loadStorage=JSON.parse(localStorage.getItem("load"))
+				loadStorage.push(l.str);
+				localStorage.setItem('load',JSON.stringify(loadStorage));	
+				//console.log(JSON.stringify(loadStorage));
+			}
+			else{
+			var x=[];
+			x.push(l.str);
+			localStorage.setItem('load',JSON.stringify(x));
+		}
+		
+		});
+		var unloadStorage;
+		$(window).on('unload',function(e){
+			var unl=new store(e.type,e.target,new Date(),"unloaded");
+			if (localStorage["page unloaded"]) {
+				unloadStorage=JSON.parse(localStorage.getItem("page unloaded"))
+				unloadStorage.push(unl.str);
+				localStorage.setItem("page unloaded",JSON.stringify(unloadStorage));
+				console.log(JSON.stringify(unloadStorage));
+			}
+			else{
+			var x=[];
+			x.push(unl.str);
+			localStorage.setItem('page unloaded',JSON.stringify(x));
+	}
+			
+		});
+		
+		$gener.on("click",function(e){
+			
+			var generateStoarge;
+		var s=new store(e.type,e.target,new Date(),e.target.textContent);
+	if(localStorage["generate"]){
+				generateStoarge=JSON.parse(localStorage.getItem("generate"))
+				generateStoarge.push(s.str);
+				localStorage.setItem('generate',JSON.stringify(generateStoarge));
+				console.log(JSON.stringify(generateStoarge));
+			}
+			else{
+			var x=[];
+			x.push(s.str);
+			localStorage.setItem('generate',JSON.stringify(x));
+	}
+	d.innerHTML="";
+
+		if ($("#num").val()<=0 || $("#num").val()>26) {
+			
+			alert("Invalid Input Range");
+			$("#num").val()=null;
+			
+			}
+			
+		else{	
+			
+			$img.removeAttr('src','photos/'+images[idx]);
+		var rand,newItem,character,arr=[],chk,a=0;
+		for(var i=0 ;i <= $number.val(); i++){ 
+			rand=Math.floor(Math.random() * 26);
+			
+				if(i==0){
+		        arr[i]=	array[rand];
+				}
+				else{
+			for(var j=0 ;j<=i; j++){
+				chk=false;
+					if(arr[j]==array[rand]){
+						rand=Math.floor(Math.random() *26);                           //these lines r my queen code
+			        	j=0; chk=true;
+			        		
+			} 
+
+		    if(j==i && chk==false){
+		    	//alert("yes");
+		        arr[i]=	array[rand];
+		        break;
+		    }
+		            
+		}
+							
+			 newItem=document.createElement("button");
+			 character=document.createTextNode(array[rand]);
+				newItem.appendChild(character);
+				
+				newItem.setAttribute('class','btnss');
+				
+				$div.append(newItem);
+		}	
+	}
+		
+		//var getButtons=document.getElementById()
+		//countGenerated++;
+		}});
+		
+		
+		$div.on("click",function(e){
+			if(e.target.tagName!="DIV"){
+            e.target.setAttribute('style','background-color: red;')
+            }
+			for(var i=0;i<26;i++){
+				if(e.target.textContent==array[i]){
+				idx=i;
+				break; 
+				}
+			}
+
+			var vall="photos/"+images[idx];
+			$img.attr('src',vall);
+			$img.attr('class','showImg');
+			//alert(e.target.textContent);
+		var s2=new store(e.type,e.target,new Date(),e.target.textContent);
+		var btnStoarge;
+		if(e.target.tagName!="DIV"){
+			
+				if(localStorage['clicked on '+e.target.textContent]){
+				btnStoarge=JSON.parse(localStorage.getItem("clicked on "+e.target.textContent))
+				btnStoarge.push(s2.str);
+				localStorage.setItem('clicked on '+e.target.textContent,JSON.stringify(btnStoarge));
+				console.log(JSON.stringify(btnStoarge));
+				}
+			    else
+			var x=[];
+			x.push(s2.str);
+			localStorage.setItem('clicked on '+e.target.textContent,JSON.stringify(x));
+			}});
+
+			
+   function store(type,target,time,content){                                   // template function
+   	    this.type=type;
+		this.target=target.toString();
+      	this.time=time;
+		this.content=content;	
+     	this.str={'type':this.type,
+    	 'target':this.target,
+    	 'content':this.content,
+   	     'time':this.time
+   	  };
+   };	 
+	
+		setInterval(function() {
+			for (var i=0;i<localStorage.length;i++) {
+				$.ajax({
+					"url":"Ajax.php",
+					"type":"POST",
+					"data":{"object":localStorage[localStorage.key(i)]},
+					"success":function(response){
+						console.log(response);
+					}
+				})
+				}	
+			localStorage.clear();
+		}, 5000);
+		var b=true;
+		$('#show').on('click',function(){
+			$('#tbl').append("<tr><td id='t'>Type</td><td id='t'>Content</td><td id='t'>Target</td><td id='t'>Time</td></tr>");
+			$('td').attr("class","tblr");
+		       $.ajax({
+		       	"url":"Ajax.php",
+		       	"type":"GET",
+		       	"data":{"retrive":""},
+		       	"success":function(response){
+					   var data=JSON.parse(response);
+					   $('#tbl').html("");
+					   $('#tbl').append("<tr><td id='t'>Type</td><td id='t'>Content</td><td id='t'>Target</td><td id='t'>Time</td></tr>");
+					  // $('#t.td').attr("class","tblr1");
+					   for (var i = 0; i < data.length; i++) {
+$('#tbl').append("<tr><td>"+data[i]['_type']+"</td><td>"+data[i]['_content']+"</td><td>"+data[i]['_target']+"</td><td>"+data[i]['_time']+"</td></tr>")
+					   }
+					  $('td').attr("class","tblr");
+					  
+					 window.scrollBy(0, 500);
+		       	}
+		       })
+		})
+	</script>
+	</body>
+</html>
